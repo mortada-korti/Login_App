@@ -1,4 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+* > * {
+  font-family: "Poppins", sans-serif;
+}
+@layer base {
+  body {
+    @apply flex items-center h-screen justify-center;
+    background-image: url("/assets/Background.png");
+  }
+  .btn {
+    @apply hover:bg-opacity-80 transition delay-75 rounded-md p-2;
+  }
+}
