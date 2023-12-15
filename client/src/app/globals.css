@@ -14,4 +14,7 @@
   .btn {
     @apply hover:bg-opacity-80 transition delay-75 rounded-md p-2;
   }
+  input[type="file"] {
+    display: none;
+  }
 }
