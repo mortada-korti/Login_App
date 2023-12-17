@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import morgan from "morgan";
+import connect from "./database/connection";
+
 
 const app = express();
 const PORT = 8080;
@@ -15,6 +17,17 @@ app.get("/", (req: Request, res: Response) => {
   res.status(201).json("Home GET Request");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// Start server only when we have a valid connection
+connect()
+  .then(() => {
+    try {
+      app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+      });
+    } catch (error) {
+      console.log(`Cannot connect to the server...${error}`);
+    }
+  })
+  .catch((error) => {
+    console.log(`Invalid database connection... ${error}`);
+  });
