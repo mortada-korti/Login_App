@@ -1,28 +1,41 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Avatar from "../../../public/assets/profile.png";
 import Link from "next/link";
 import { Toaster } from "react-hot-toast";
 import { useFormik } from "formik";
-import { validateUsername } from "../helper/validate";
+import { validateRegister } from "../helper/validate";
+import { convertToBase64 } from "../helper/convert";
 
 type Props = {};
 
 const Register = (props: Props) => {
+  const [file, setFile] = useState<string>();
+
   const formik = useFormik({
     initialValues: {
       username: "",
       email: "",
       password: "",
     },
-    validate: validateUsername,
+    validate: validateRegister,
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {
+      values = await Object.assign(values, { profile: file || "" });
       console.log(values);
     },
   });
+
+  const onUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      return;
+    }
+    const base64 = await convertToBase64(e.target.files[0]);
+    setFile(base64);
+  };
+
   return (
     <div className="min-w-[85%] sm:min-w-[350px] flex flex-col gap-5 items-center bg-gray-100 py-8 px-2 rounded-xl border-white border-2 shadow-lg h-[90%] sm:h-[65%]">
       <Toaster position="top-center"></Toaster>
@@ -35,10 +48,10 @@ const Register = (props: Props) => {
         onSubmit={formik.handleSubmit}
       >
         <label htmlFor="profile">
-          <div className="w-24 rounded-full bg-white shadow-md">
-            <Image src={Avatar} alt="avatar" />
+          <div className="w-24 rounded-full bg-white shadow-md overflow-hidden">
+            <Image src={file || Avatar} alt="avatar" width={100} height={100} />
           </div>
-          <input type="file" name="profile" id="profile" />
+          <input onChange={onUpload} type="file" name="profile" id="profile" />
         </label>
 
         <input

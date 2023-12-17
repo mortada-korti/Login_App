@@ -34,3 +34,45 @@ export const validateResetPassword = async (values: {
   }
   return error;
 };
+
+// Validate register
+export const validateRegister = async (values: {
+  password: string;
+  username: string;
+  email: string;
+}) => {
+  let error = await validateEmail(values);
+  error = await validateUsername(values);
+  error = await validatePassword(values);
+  if (error) {
+    return error;
+  }
+};
+
+// Validate profile
+export const validateProfile = async (values: {
+  firstName: string;
+  lastName: string;
+  mobile: string;
+  email: string;
+  address: string;
+}) => {
+  let error = await validateEmail(values);
+  if (error) {
+    return error;
+  }
+};
+
+// Validate email
+export const validateEmail = async (values: { email: string }) => {
+  let error = {};
+  const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+  if (
+    !values.email ||
+    values.email.includes(" ") ||
+    !regex.test(values.email)
+  ) {
+    error = toast.error("Invalid email !");
+  }
+  return error;
+};
